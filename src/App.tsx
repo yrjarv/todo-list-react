@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
-import { NewTodoForm } from "./NewTodoForm"
-import { TodoList } from "./TodoList"
+import { initializeApp } from "firebase/app"
+import { TodoForm } from "./TodoForm"
+import { TodoUL } from "./TodoUL"
 import { Todo } from "./types"
 import "./styles.css"
 

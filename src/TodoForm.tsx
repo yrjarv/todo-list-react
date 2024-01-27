@@ -1,10 +1,10 @@
 import { useState} from "react"
 
-interface NewTodoFormProps {
+interface TodoFormProps {
     onSubmit: (param1: string) => void
 }
 
-export function NewTodoForm ({ onSubmit }: NewTodoFormProps) {
+export function TodoForm ({ onSubmit }: TodoFormProps) {
     const [newItem, setNewItem] = useState("")
 
     function handleSubmit(e: React.FormEvent) {

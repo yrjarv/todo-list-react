@@ -1,13 +1,13 @@
 import { DeleteTodo, TodoArray, ToggleTodo } from "./types"
 import { TodoItem } from "./TodoItem"
 
-interface TodoListProps {
+interface TodoULProps {
     todos: TodoArray,
     toggleTodo: ToggleTodo,
     deleteTodo: DeleteTodo
 }
 
-export function TodoList({ todos, toggleTodo, deleteTodo }: TodoListProps) {
+export function TodoUL({ todos, toggleTodo, deleteTodo }: TodoULProps) {
     return (
         <ul className="list">
             {todos.length === 0 && "No Todos"}
