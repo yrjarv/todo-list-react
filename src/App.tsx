@@ -6,6 +6,17 @@ import { Todo } from "./types"
 import "./styles.css"
 
 export default function App() {
+  // Initalize Firebase
+  const firebaseConfig = {
+    apiKey: import.meta.env.APIKEY,
+    authDomain: import.meta.env.AUTHDOMAIN,
+    projectId: import.meta.env.PROJECTID,
+    storageBucket: import.meta.env.STORAGEBUCKET,
+    messagingSenderId: import.meta.env.MESSAGINGSENDERID,
+    appId: import.meta.env.APPID
+  }
+  const app = initializeApp(firebaseConfig)
+
   const [todos, setTodos] = useState(():Todo[] => {
     const localValue = localStorage.getItem("ITEMS")
     if (localValue === null) {return []}
@@ -44,9 +55,9 @@ export default function App() {
 
   return (
     <>
-      <NewTodoForm onSubmit={addTodo} />
+      <TodoForm onSubmit={addTodo} />
       <h1 className="header">Todo List</h1>
-      <TodoList todos={todos} toggleTodo={toggleTodo} deleteTodo={deleteTodo} />
+      <TodoUL todos={todos} toggleTodo={toggleTodo} deleteTodo={deleteTodo} />
     </>
   )
 }
