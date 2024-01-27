@@ -16,6 +16,7 @@ export default function App() {
     appId: import.meta.env.APPID
   }
   const app = initializeApp(firebaseConfig)
+  console.log('To satisfy TS compiler, here is the app.name: ' + app.name)
 
   const [todos, setTodos] = useState(():Todo[] => {
     const localValue = localStorage.getItem("ITEMS")
