@@ -1,41 +1,81 @@
 import { useEffect, useState } from "react"
-import { initializeApp } from "firebase/app"
 import { TodoForm } from "./TodoForm"
 import { TodoUL } from "./TodoUL"
 import { Todo } from "./types"
 import "./styles.css"
+import { firebaseConfig } from "./firebase"
+import firebase from "firebase/compat/app"
+import 'firebase/firestore';
+import 'firebase/compat/firestore';
+
+firebase.initializeApp(firebaseConfig)
 
 export default function App() {
-  // Initalize Firebase
-  const firebaseConfig = {
-    apiKey: import.meta.env.APIKEY,
-    authDomain: import.meta.env.AUTHDOMAIN,
-    projectId: import.meta.env.PROJECTID,
-    storageBucket: import.meta.env.STORAGEBUCKET,
-    messagingSenderId: import.meta.env.MESSAGINGSENDERID,
-    appId: import.meta.env.APPID
-  }
-  const app = initializeApp(firebaseConfig)
-  console.log('To satisfy TS compiler, here is the app.name: ' + app.name)
-
-  const [todos, setTodos] = useState(():Todo[] => {
-    const localValue = localStorage.getItem("ITEMS")
-    if (localValue === null) {return []}
-    return JSON.parse(localValue)
-  })
+  const [todos, setTodos] = useState<Todo[]>([]);
 
   useEffect(() => {
-    localStorage.setItem("ITEMS", JSON.stringify(todos))
-  }, [todos])
+    // Fetch todos from Firestore
+    const fetchTodos = async () => {
+      try {
+        const snapshot = await firebase.firestore().collection('todoelements').get();
+        const todosFromFirestore = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Todo[];
+        setTodos(todosFromFirestore);
+      } catch (error) {
+        console.error('Error fetching todos from Firestore:', error);
+      }
+    };
 
-  function addTodo(title: string) {
-    setTodos((currentTodos: Todo[]): Todo[] => {
-      return [
-      ...currentTodos,
-      { id: crypto.randomUUID(), title, completed: false }
-      ]
-    })
-  }
+    fetchTodos();
+  }, []);
+
+  useEffect(() => {
+    // Upload todos to Firestore and delete the ones not in todos
+    const updateFirestore = async () => {
+      try {
+        // Get existing todo IDs from Firestore
+        const snapshot = await firebase.firestore().collection('todoelements').get();
+        const existingTodoIds = snapshot.docs.map((doc) => doc.id);
+
+        // Filter todos to be added
+        const todosToAdd = todos.filter((todo) => !existingTodoIds.includes(todo.id));
+
+        // Filter todos to be deleted
+        const todosToDelete = existingTodoIds.filter(
+          (existingTodoId) => !todos.some((todo) => todo.id === existingTodoId)
+        );
+
+        // Add new todos to Firestore
+        const addTodoPromises = todosToAdd.map((todo) =>
+          firebase.firestore().collection('todoelements').add(todo)
+        );
+
+        // Delete todos not in todos from Firestore
+        const deleteTodoPromises = todosToDelete.map((todoId) =>
+          firebase.firestore().collection('todoelements').doc(todoId).delete()
+        );
+
+        // Wait for all operations to complete
+        await Promise.all([...addTodoPromises, ...deleteTodoPromises]);
+      } catch (error) {
+        console.error('Error updating Firestore:', error);
+      }
+    };
+
+    updateFirestore();
+  }, [todos]);
+
+  const addTodo = (title: string) => {
+    const newTodo: Todo = {
+      id: crypto.randomUUID(),
+      title,
+      completed: false,
+    };
+
+    setTodos((currentTodos: Todo[]) => [...currentTodos, newTodo]);
+  };
 
   function toggleTodo(id: string, completed: boolean) {
     setTodos(currentTodos => {
