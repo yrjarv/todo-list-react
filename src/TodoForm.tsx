@@ -16,7 +16,8 @@ export function TodoForm ({ onSubmit }: TodoFormProps) {
     return (
         <form
             onSubmit={handleSubmit}
-            className="new-item-form">
+            name="New Item"
+        >
             <div className="form-row">
                 <label htmlFor="item">New Item</label>
                 <input
@@ -25,8 +26,8 @@ export function TodoForm ({ onSubmit }: TodoFormProps) {
                 type="text"
                 id="item"
                 />
-                </div>
-                <button className="btn">Add</button>
+                <button>Add</button>
+            </div>
         </form>
     )
 }

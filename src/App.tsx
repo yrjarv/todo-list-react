@@ -97,7 +97,7 @@ export default function App() {
   return (
     <>
       <TodoForm onSubmit={addTodo} />
-      <h1 className="header">Todo List</h1>
+      <h1>Todo List</h1>
       <TodoUL todos={todos} toggleTodo={toggleTodo} deleteTodo={deleteTodo} />
     </>
   )

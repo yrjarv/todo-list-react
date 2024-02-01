@@ -9,8 +9,8 @@ interface TodoULProps {
 
 export function TodoUL({ todos, toggleTodo, deleteTodo }: TodoULProps) {
     return (
-        <ul className="list">
-            {todos.length === 0 && "No Todos"}
+        <ul>
+            {todos.length === 0 && <li>No Todos</li>}
             {todos.map(todo => {
             return (
                 <TodoItem
