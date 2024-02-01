@@ -3,12 +3,12 @@ import { getFirestore } from "firebase/firestore"
 
 // Initalize Firebase
 export const firebaseConfig = {
-  apiKey: import.meta.env.VITE_apiKey,
-  authDomain: import.meta.env.VITE_authDomain,
-  projectId: import.meta.env.VITE_projectId,
-  storageBucket: import.meta.env.VITE_storageBucket,
-  messagingSenderId: import.meta.env.VITE_messagingSenderId,
-  appId: import.meta.env.VITE_appId
+  apiKey: "AIzaSyCcnNV7yW8gKuZ7b555AWIT43WrTP--UoM",
+  authDomain: "todo-yrjarv.firebaseapp.com",
+  projectId: "todo-yrjarv",
+  storageBucket: "todo-yrjarv.appspot.com",
+  messagingSenderId: "917782598927",
+  appId: "1:917782598927:web:a87a59b397b7f45b9f5a7a"
 }
 const app = initializeApp(firebaseConfig)
 const database = getFirestore(app)
